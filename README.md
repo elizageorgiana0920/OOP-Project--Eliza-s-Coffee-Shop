@@ -172,8 +172,6 @@ The workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on p
 3. Build the application and test target on Ubuntu.
 4. Run the registered automated tests through CTest.
 
-[View GitHub Actions](https://github.com/elizageorgiana0920/POO-tema-3/actions)
-
 ## File-Based Data
 
 The program uses text files rather than a database server.

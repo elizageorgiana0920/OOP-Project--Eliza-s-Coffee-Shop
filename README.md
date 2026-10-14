@@ -1,145 +1,212 @@
-# Gestiunea unei cafenele - Review
-## Eliza's Coffee Shop
+# Eliza's Coffee Shop ☕
 
-Pentru Tema 3, am implementat o aplicație software care se ocupă cu gestionarea completă a unei cafenele. Aplicația are la bază trei meniuri interactive separate, structurate astfel încât să asigure o utilizare facilă pentru cele trei categorii de utilizatori: Clientul, Barista și Managerul. Fiecare dintre aceștia deține roluri complet diferite și esențiale în funcționarea corectă și eficientă a cafenelei.
+**C++20 | Object-Oriented Programming | Design Patterns | CMake | GoogleTest | GitHub Actions**
 
----
+A console-based coffee shop management system developed as a university Object-Oriented Programming project. It models ordering, product customization, inventory, preparation queues, and business reporting across three user roles: **Customer**, **Barista**, and **Manager**.
 
-### 1. Meniul pentru Client
-Accesarea acestui meniu se face la liber, fără a fi necesară introducerea unei chei de acces sau a unei parole. Clientul beneficiază de o gamă variată de opțiuni:
+This project focuses on maintainable C++ design, runtime polymorphism, reusable components, file-based persistence, and automated testing.
 
-* **VEZI MENIU COMPLET:** Permite vizualizarea catalogului integral de preparate, oferind transparență totală asupra ofertei cafenelei, indiferent dacă produsele se află sau nu în stoc la momentul respectiv.
-* **VEZI CE OPTIUNI AVEM DISPONIBILE MOMENTAN:** Oferă posibilitatea de a filtra și vizualiza exclusiv preparatele care se află pe stoc.
-* **ALEGE UN MENIU PERSONALIZAT:** Pe baza unui scurt chestionar, clientul poate filtra produsele în funcție de preferințele sau restricțiile sale dietetice. Fie că dorește produse fără zahăr, fără lactoză, vegane sau care să conțină (ori să excludă) un ingredient specific introdus de la tastatură, aplicația va genera o listă adaptată exact nevoilor sale.
-* **CĂUTARE PRODUS:** Prin simpla introducere a numelui unui preparat, clientul primește instant informații detaliate și specifice legate de preț, timp de preparare și proprietăți nutriționale.
-* **COMANDĂ ACUM:** Permite clientului să inițieze o comandă pas cu pas. Acesta introduce numele preparatului dorit. În cazul în care alege o băutură, sistemul îl întreabă dacă dorește un topping extra (care va fi încasat suplimentar). Dacă alege un sandwich, sistemul verifică dacă rețeta permite încălzirea și îi oferă această opțiune. După trimiterea comenzii, clientul primește pe consolă un bon fiscal detaliat ce conține: rezumatul produselor, prețul final, data/ora plasării și un cod unic de ridicare generat pe baza timestamp-ului Unix (prin preluarea ultimelor 3 cifre, asigură unicitatea).
+## Highlights
 
-### 2. Meniul pentru Barista
-Meniul dedicat personalului din spatele barului a fost actualizat pentru a oferi o utilizare cât mai practică. Logarea în acest meniu este securizată și necesită o parolă (*hardcoded* ca fiind `barista123`). Opțiunile puse la dispoziție sunt:
+- **Role-based workflows:** separate menus for customers, baristas, and managers.
+- **Extensible product hierarchy:** drinks, pastries, and sandwiches share an abstract product interface.
+- **Customizable orders:** extra drink toppings and optional sandwich heating.
+- **Inventory tracking:** stock consumption, restocking, expiry checks, and low-stock alerts.
+- **Preparation queue:** baristas can inspect pending orders and process the oldest order.
+- **Pricing policies:** switch between standard, Happy Hour, and weekend pricing at runtime.
+- **Business reports:** sales history, cumulative profit, best-selling products, and peak hours.
+- **Automated validation:** 21 GoogleTest unit tests and a GitHub Actions build-and-test workflow.
 
-* **VEZI PRODUSELE DIN MENIU CARE SUNT PE STOC:** Barista poate vizualiza rapid doar preparatele disponibile. Această funcție este esențială pentru a ști exact ce se poate produce în timp real, eliminând din câmpul vizual produsele indisponibile.
-* **VIZUALIZEAZĂ COMENZI ACTIVE ÎN AȘTEPTARE:** Această opțiune expune o coadă polimorfică de comenzi active, trimise direct de clienți. Barista are la dispoziție bonul aferent fiecărei comenzi pentru a le putea pregăti în ordinea corectă a sosirii lor.
-* **PREPARA / FINALIZEAZA CEA MAI VECHE COMANDĂ:** Cu ajutorul acestei opțiuni, barista finalizează și elimină din coada de așteptare cea mai veche comandă din sistem (cea a persoanei care se află la rând), actualizând simultan timpul estimat de așteptare pentru clienții următori.
-* **ALERTE AUTOMATE DE STOC:** De fiecare dată când barista accesează o opțiune din meniu, sistemul afișează automat pe ecran alerte vizuale privind stocurile critice. Sunt semnalate ingredientele cu mai puțin de 5 unități și produsele de patiserie/sandwich-urile cu mai puțin de 3 unități, alături de numărul total al alertelor active extras din clasa șablon.
+## Tech Stack
 
-### 3. Meniul pentru Manager
-Acesta reprezintă cel mai complex modul al aplicației, oferind control administrativ, logistic și economic asupra întregii afaceri. Logarea se face pe bază de parolă securizată (setată în cod ca `manager456`), iar opțiunile sunt:
+| Area | Technologies and concepts |
+| --- | --- |
+| Language | C++20, STL, templates, smart pointers |
+| Architecture | OOP, abstract classes, inheritance, runtime polymorphism, NVI, SOLID principles |
+| Design patterns | Singleton, Factory Method, Strategy |
+| Build tooling | CMake, GCC / C++20-compatible compiler |
+| Testing | GoogleTest, CTest, boundary-value and exception testing |
+| CI | GitHub Actions (Ubuntu runner) |
+| Storage | Text-file input and persistence |
 
-* **VEZI MENIU COMPLET:** Permite managerului să consulte întreaga listă de produse în cazul în care ar vrea modificarea structurii și a prețurilor de bază.
-* **VEZI STOC INGREDIENTE:** Afișează inventarul tuturor ingredientelor din depozit.
-* **REAPROVIZIONEAZĂ:** Permite managerului să introducă marfă nouă în sistem, crescând cantitățile ingredientelor selectate și actualizând stocurile în timp real.
-* **INGREDIENTE CU STOC CRITIC:** Filtrează inventarul și afișează strict ingredientele care au coborât sub pragul de 5 unități, ajutând la o reaprovizionare mai eficientă.
-* **PRODUSE CU STOC CRITIC (PATISERIE/SANDWICH):** Afișează produsele gata preparate din vitrină care au stocul mai mic de 3 bucăți și necesită o suplimentare urgentă.
-* **RAPOARTE BUSINESS:** Optiunea pentru controlul financiar ar cafenelei, afiseaza: profitul total acumulat (care persistă și se adună în continuare între rulările programului datorită salvării în fișier), ora de vârf (ora în care s-au înregistrat cele mai multe comenzi) și cel mai vândut produs din istoric.
-* **VEZI TOATE COMENZILE (ISTORIC):** Oferă acces la registrul complet de vânzări. Fiecare comandă are un ID unic și un număr de ordine pe sesiune (care se resetează la 1 la fiecare pornire a programului), permițând managerului o delimitare clară a activității per zi/sesiune.
-* **MODIFICĂ POLITICA DE PREȚURI:** Managerul poate schimba dinamic mecanismul de calcul al prețurilor la nivel global. Poate menține regimul standard, poate activa tariful de weekend (+10% la toate produsele pentru maximizarea profitului în perioadele aglomerate) sau poate introduce regimul de Happy Hour (-20% discount pentru stimularea vânzărilor).
-* **VERIFICĂ ALERTE STOC ȘI STRATEGII DE PREȚ ACTIVE ÎN DEPOZIT:** O opțiune care apelează direct funcțiile șablon, afișand numărul total de mesaje de alertă active și numărul de strategii de preț încărcate în memorie pentru o mai bună planificare logistică.
+## Features
 
----
-## Respectarea Cerințelor – Tema 3
+### Customer
 
-Pentru această temă am implementat toate cerințele impuse, plus câteva îmbunătățiri față de etapele anterioare.
+- Browse the complete menu or show only currently available items.
+- Search products by name and inspect pricing, preparation time, and nutritional information.
+- Filter options by dietary preferences (vegan, sugar-free, lactose-free) or included/excluded ingredients.
+- Customize drinks with extra toppings and request sandwich heating when supported.
+- Place orders and receive an order summary with pricing, timestamp, and a pickup reference.
 
-### Design Patterns
+### Barista
 
-Am integrat trei șabloane de proiectare:
+- View available products and inspect active orders.
+- Process orders from the preparation queue in arrival order.
+- View updated waiting-time information.
+- Receive low-stock alerts for ingredients (**fewer than 5 units**) and prepared products (**fewer than 3 units**).
 
-**Singleton** l-am folosit în clasa `Gestiune`, pentru că toată cafeneaua e coordonată de o singură instanță. Constructorul e privat, copia și atribuirea sunt dezactivate, iar accesul se face exclusiv prin `getInstanta()`.
+### Manager
 
-**Factory Method** apare în `ProdusFactory`, prin metoda statică `creeazaProdus`. Primește un string cu tipul produsului și returnează un `shared_ptr<Produs>` care este fie `Bautura`, `Patiserie` sau `Sandwich`.
+- Review inventory and restock ingredients.
+- Identify critical inventory levels and handle expired products.
+- Inspect order history and business reports.
+- View total accumulated profit, peak ordering hours, and best-selling products.
+- Switch the global pricing policy while the application is running.
 
-**Strategy** l-am aplicat pentru prețuri. Interfața `StrategiePret` are trei implementări: `StrategieStandard`, `StrategieHappyHour` (−20%) și `StrategieWeekend` (+10%). Managerul poate schimba strategia global la rulare, fără să afecteze logica produselor.
+## Software Architecture
 
-### Clasa Șablon
+```text
+                         Produs (abstract)
+                        /        |        \
+                   Bautura   Patiserie   Sandwich
+                        \        |        /
+                       ProdusFactory
+                             |
+                    Gestiune (Singleton)
+                      /       |        \
+               Ingredient   Comanda   StrategiePret
+                   |                    /    |     \
+                Depozit<T>       Standard  HappyHour  Weekend
+```
 
-Am proiectat `Depozit<T>` ca o clasa template cu operații de bază: adăugare, ștergere, verificare și acces la elemente. În `Gestiune` o folosesc în două moduri: `Depozit<std::string>` pentru alertele de stoc și `Depozit<shared_ptr<StrategiePret>>` pentru strategiile disponibile în sistem, astfel am doua instanțieri.
+*Conceptual overview; the code contains additional dependencies and helper classes.*
 
----
+### Core classes
 
----
+| Component | Responsibility |
+| --- | --- |
+| `Produs` | Abstract product API, polymorphic cloning, final-price and availability contracts, non-virtual display interface |
+| `Bautura` | Recipe ingredients, optional toppings, nutrition and pricing |
+| `Patiserie` | Prepared-item stock and expiry checks |
+| `Sandwich` | Prepared-item stock, expiry checks and optional heating |
+| `Ingredient` | Ingredient stock, pricing and dietary/nutritional attributes |
+| `Comanda` | Shopping basket, order summary and finalization |
+| `Gestiune` | Coordinates menu, inventory, order processing, persistence and reports |
+| `Autentificare` | Role selection and password checks for staff menus |
+| `Depozit<T>` | Generic container supporting insertion, clearing and element access |
+| `ProdusFactory` | Creates products through a common factory interface |
+| `StrategiePret` | Abstracts pricing calculations into interchangeable policies |
 
-## Aplicarea Principiilor SOLID
+### Design patterns
 
-### 1. S — Single Responsibility Principle
-Fiecare clasă din cadrul proiectului are o singură responsabilitate clar definită și izolată. De exemplu, clasa `Ingredient` se ocupă strict de starea, stocul și proprietățile nutriționale ale unei ingredient, fără a cunoaște modul în care acestea sunt combinate sau încasate. În mod similar, clasa `Autentificare` este responsabilă exclusiv de securitatea aplicației și de verificarea parolelor, fiind complet separată de logica de business sau de preparare a produselor.
+**Singleton — `Gestiune`**  
+Provides a single coordinating instance for the application's business state.
 
-### 2. O — Open/Closed Principle
-Sistemul poate fi extins cu ușurință, se pot face adăugări la cod. Acest lucru a fost realizat cu ajutorul design pattern-urilor *Strategy* și *Factory*. Dacă pe viitor cafeneaua dorește să introducă o nouă politică de reduceri (de exemplu, o promoție specială de sărbători), nu este necesară modificarea claselor `Produs` sau `Gestiune`. Este suficient să se creeze o nouă clasă derivată din interfața `StrategiePret`, iar sistemul o va integra dinamic, fără a risca stricarea funcționalităților deja introduse.
+**Factory Method-style creation — `ProdusFactory`**  
+Creates `Bautura`, `Patiserie`, or `Sandwich` objects through a common product interface.
 
-### 3. L — Liskov Substitution Principle 
-Clasele derivate (`Bautura`, `Sandwich`, `Patiserie`) pot înlocui în orice moment clasa de bază `Produs` în cadrul colecțiilor polimorfice, fără a afecta stabilitatea programului. Atât meniul din clasa `Gestiune`, cât și lista de cumpărături din clasa `Comanda` utilizează containere de pointeri inteligenți `std::vector<std::shared_ptr<Produs>>`. În timpul parcurgerii acestor liste, apelarea metodelor virtuale precum `p->getPretFinal()` sau `p->esteDisponibil()` garantează un comportament corect, indiferent de tipul real al obiectului aflat în spate.
+**Strategy — `StrategiePret`**  
+Supports configurable pricing rules:
+- **Standard:** base price
+- **Happy Hour:** 20% discount
+- **Weekend:** 10% surcharge
 
-### 4. I — Interface Segregation Principle 
-Clasele derivate nu sunt forțate să depindă de funcționalități pe care nu le utilizează. Interfața clasei de bază `Produs` impune obținerea unei liste de ingrediente, aspect critic pentru rețeta unei `Bauturi`. Cu toate acestea, produsele finite de tip `Patiserie` sau `Sandwich` sunt gestionate la bucată și nu au nevoie de o listă dinamică de componente, astfel am implementat o metodă prin care ambele clase returnează o referință către o listă vidă statică comună (`listaVida`).
+The strategy can change without requiring separate pricing logic throughout the product hierarchy.
 
-### 5. D — Dependency Inversion Principle 
-CLasele complexe nu depind de cele mai mici, clasa de bază `Produs` are nevoie să interacționeze cu un algoritm de calcul al prețului, însă ea nu depinde de clasele specifice precum `StrategieHappyHour` sau `StrategieWeekend`. În schimb, `Produs` deține doar un pointer către strategie `std::shared_ptr<StrategiePret>`. Dependența este inversată, deoarece produsele nu mai sunt legate de formulele de calcul, prețurile pot fi schimbate pe parcurs, prin metoda setStrategiePret.
+### C++ engineering concepts
 
-## ️ Structura Detaliată a Metodelor Utilizate
+- Runtime polymorphism via virtual methods and abstract classes.
+- `std::shared_ptr` and polymorphic `clone()` operations where required.
+- Non-Virtual Interface (NVI) for product display.
+- Generic programming through `Depozit<T>`.
+- Custom exceptions, including insufficient-stock handling.
+- Modular organization into header and implementation files.
+- Design informed by SOLID principles, especially separation of responsibilities and dependency on abstractions.
 
-### 1. Clasa `Produs` (Clasa de Bază)
-* `virtual std::shared_ptr<Produs> clone() const = 0;`
-* `virtual float calculeazaPretFinal() const = 0;` // Calcul preț total pentru un produs
-* `virtual bool esteDisponibil() const = 0;` // Verificare stoc și termen de valabilitate
-* `void afiseaza(std::ostream& os) const;` // Interfață Non-Virtuală (NVI) pentru afișare
-* `virtual bool esteVegan() const = 0;` // Getter pentru filtrare
-* `virtual float calculeazaKcalTotal() const = 0;` // Calcul kilocalorii
+## Build & Run
 
-### 2. Clasa `Bautura`
-* `void adaugaIngredient(Ingredient* ing);` // Definire rețetă de bază
-* `void adaugaToppingExtra(Ingredient* top);` // Personalizare comandă client
-* `float calculeazaPretFinal() const override;` // Suma (PretBaza + Ingrediente + Toppings + StrategiePret)
-* `const std::vector<Ingredient*>& getIngrediente() const override;` // Returnează lista de ingrediente
+### Requirements
 
-### 3. Clasa `Sandwich`
-* `void cereIncalzit();` // Opțiune încălzire
-* `float calculeazaPretFinal() const override;` // Include taxa de încălzire (+2 RON)
-* `bool esteExpirat() const;` // Verificare timestamp vs timp curent
-* `void marcheazaExpirat();` // Setează stocul la 0 (scoatere forțată din meniu)
-* `void scadeStoc();` // Actualizare inventar după vânzare
+- A C++20-compatible compiler
+- CMake **3.14 or newer**
+- Internet access during the first configuration if GoogleTest has not yet been downloaded by CMake
 
-### 4. Clasa `Patiserie`
-* `bool esteExpirat() const;` // Verificare valabilitate
-* `void marcheazaExpirat();` // Setează stocul la 0
-* `void scadeStoc();` // Actualizare stoc
-* `int getStoc() const;` // Accesare cantitate disponibilă
+From the repository root:
 
-### 5. Clasa `Gestiune`
-* `void incarcaIngrediente(string fisier);` // Preia materia prima
-* `void incarcaMeniuSandwich(string fisier);` // Preia obiecte Sandwich din fișier
-* `void incarcaMeniuPatiserie(string fisier);` // Preia obiecte Patiserie din fișier
-* `void afisareMeniu(bool doarDisponibile) const;` // Vizualizare meniu complet sau filtrat in functie de stoc
-* `void verificaPatiserieExpirata();` // Verifica produsele din stoc daca sunt expirate si le "arunca", adica le reseteaza stocul la 0(cu ajutorul altei metode)
-* `void proceseazaComanda(shared_ptr<Produs> p, int ora);` // Scade stoc, adaugă profit, scrie registru
-* `void afisareProduseCriticePatiserieSandwich() const;` // Alertă manager pentru produse din patiserie sau sandwich < 3
-* `void afisareRapoarte() const;` // Analizeaza datele salvate in fisierele care persista in vederea calcularii rapoartelor
+```bash
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Debug
+cmake --build build
+```
 
-### 6. Clasa `Comanda`
-* `void adaugaProdus(shared_ptr<Produs> p);` // Adăugare în comanda
-* `void finalizeazaComanda(Gestiune& g);` // Confirmare plată și trimitere în procesare stocuri
-* `void afisareSumarConsola() const;` // Afișare bon fiscal înainte de plată
+Run the main program from the **repository root** so its relative `.txt` data-file paths can be resolved:
 
-### 7. Clasa `Autentificare` (Sistemul de Securitate)
-* `static Rol selecteazaRol();` // Gestionează meniul de start și validarea tipului de utilizator
-* `static void verificaParola(Rol rol);` // Verifică daca parola a fost introdusa corect și aruncă `AccesInterzisException` în caz de eșec
-* `static string getNumeRol(Rol rol);` // Convertește tipul Enum în text lizibil
+**Linux / macOS**
+```bash
+./build/cafenea_tema_3
+```
 
-### 8. Clasa `Ingredient` (Gestiunea Materiilor Prime)
-* `void consumaStoc();` // Scade stocul cu 1 la vânzare, aruncă excepție dacă e 0
-* `bool atentieStocMic();` // Indicator pentru pragul critic de aprovizionare (< 5)
-* `operator>>` / `operator<<` // Facilitează citirea din fișiere și afișarea datelor
----
-##  Fișierele folosite
-Aplicația folosește fișiere externe cu scopul de a salva datele calculate și de a introduce o bază de date în sistem asemenea unei cafenele reale:
-* `profit_total.txt`: Salvează profitul încasat la închiderea corectă a programului.
-* `registru.txt`: Istoricul complet al comenzilor (contine bonurile detaliate cu ID, dată, oră și produse).
-* `statistici.txt`: Ține evidența orelor și a denumirilor produselor vândute pentru a putea genera rapoartele legate de ora de vârf și top produse vândute.
-* `ingrediente.txt` & `toppinguri.txt`: Inventarul materiei prime.
+**Windows (single-config generators such as MinGW)**
+```powershell
+.\build\cafenea_tema_3.exe
+```
 
----
+For a multi-config generator such as Visual Studio, the executable may instead be under `build/Debug/`.
 
-##  Bibliografie
-* [GeeksforGeeks - File Handling in C++](https://www.geeksforgeeks.org/cpp/file-handling-c-classes/)
-* [StackOverflow - Formatting Text Output with setw](https://stackoverflow.com/questions/54738445/how-do-i-use-setw-in-c-to-align-format-text-in-the-console)
-* [StackOverflow - Clearing input streams using cin.ignore](https://stackoverflow.com/questions/25020129/cin-ignorenumeric-limitsstreamsizemax-n)
-* [Repository POO - Exemple Arhitecturi și Structuri](https://github.com/mcmarius/poo/tree/master/tema-2)
+The application is menu-driven: choose Customer, Barista or Manager, then follow the terminal prompts. Some actions write to local data files, so consider using a copy of the sample `.txt` files while experimenting.
+
+## Automated Testing
+
+The project uses **GoogleTest** with **CMake/CTest**. The current suite contains **21 tests** across three components:
+
+| Component | Tests | Coverage focus |
+| --- | ---: | --- |
+| `StrategiePret` | 5 | Standard pricing, discounts, weekend surcharge, modifiers, zero price |
+| `Depozit<T>` | 6 | Empty state, insertion, ordering, clearing, template instantiation |
+| `Ingredient` | 10 | Initialization, stock consumption, restocking, insufficient-stock exceptions, boundaries |
+
+Run all registered tests:
+
+```bash
+ctest --test-dir build --output-on-failure
+```
+
+Alternatively, run the GoogleTest executable directly after building. Passing 21 tests does **not** mean 100% code coverage; other modules and integration paths remain candidates for future tests.
+
+### Continuous Integration
+
+The workflow in [`.github/workflows/ci.yml`](.github/workflows/ci.yml) runs on pushes and pull requests, using GitHub Actions to:
+
+1. Check out the repository.
+2. Configure the CMake project.
+3. Build the application and test target on Ubuntu.
+4. Run the registered automated tests through CTest.
+
+[View GitHub Actions](https://github.com/elizageorgiana0920/POO-tema-3/actions)
+
+## File-Based Data
+
+The program uses text files rather than a database server.
+
+| File | Purpose |
+| --- | --- |
+| `ingrediente.txt`, `toppinguri.txt` | Ingredient and topping inventory |
+| `bauturi.txt`, `patiserie.txt`, `sandwichuri.txt` | Product catalog input |
+| `registru.txt` | Order and transaction history |
+| `statistici.txt` | Data for popularity and peak-hour reporting |
+| `profit_total.txt` | Accumulated profit across runs, when generated |
+| `reaprovizionare.txt` | Restocking-related data |
+
+Some generated output files may appear only after the corresponding application functionality has run.
+
+## Current Limitations and Future Improvements
+
+This is an **academic console application**, not a production-ready point-of-sale system.
+
+- Staff passwords are currently stored directly in the source code; this is a demonstration of role-based navigation, **not secure production authentication**.
+- Pickup references derived from a short timestamp suffix are not guaranteed to be globally unique.
+- Text-file persistence is intended for learning purposes and does not provide transactional guarantees.
+- Further work could expand automated test coverage to order processing, persistence, and end-to-end workflows.
+- A future refactor could separate persistence from business logic and introduce stronger input validation.
+
+## Background
+
+Developed by **Eliza-Georgiana Boroș** as part of university coursework in Object-Oriented Programming at the **University of Bucharest**.
+
+The project evolved from an OOP assignment into an application with automated unit testing, CMake integration, and a GitHub Actions CI workflow.
+
+## References
+
+- [GoogleTest documentation](https://google.github.io/googletest/)
+- [CMake documentation](https://cmake.org/documentation/)
+- [GitHub Actions documentation](https://docs.github.com/en/actions)
